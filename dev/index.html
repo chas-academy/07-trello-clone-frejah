@@ -10,57 +10,65 @@
 
 		<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 		<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+		  
 	</head>
+
 	<body>
-	    <div class="board">
-			<div class="column list-container">
-				<div class="list">
+		<div class="adder">
+			<button class="add-new-list button">Add new list</button>
+		</div>
 
-					<div class="list-header">
-						<div class="card-title">Todo</div>
-						<button class="button delete">X</button>
-					</div>
-					
-					<ul class="list-cards">
-						<li class="card">
-							<div class="card-text">Card #1</div>
+		<div class="hide" id="trello-container">
+			<div class="board">
+				
+					<div class="list">
+
+						<div class="list-header">
+							<div class="card-title">Todo</div>
 							<button class="button delete">X</button>
-						</li>
+						</div>
+						
+						<ul class="list-cards">
+							<li class="card">
+								<div class="card-text">Card #1</div>
+								<button class="button delete">X</button>
+							</li>
+						
+						</ul>
+						<ul class="list-add-new">
+							<li class="add-new">
+								<form class="new-card" action="index.html">
+									<input type="text" name="writeCard" placeholder="Please name the card" />
+									<button class="button add">Add new card</button>
+								</form>
+							</li>
+						</ul>	
+					</div>	
 					
-					</ul>
-					<ul class="list-add-new">
-						<li class="add-new">
-							<form class="new-card" action="index.html">
-								<input type="text" name="writeCard" placeholder="Please name the card" />
-								<button class="button add">Add new card</button>
-							</form>
-						</li>
-					</ul>	
-				</div>	
 			</div>
-
-			<div class="column adder">
-				<button class="add-new-list button">Add new list</button>
-			</div>
-		</div>
-
-		<div id="card-details-dialog" class="ui-dialog">
-			<div id="tabs">
-				<ul>
-					<li><a href="#tabs-1">Text</a></li>
-					<li><a href="#tabs-2">Date</a></li>
-				</ul>
-				<div id="tabs-1">
-					<p>Text</p>
-				</div>
-				<div id="tabs-2">
-					<div class="button">
-						<p>Date: <input type="text" id="datepicker"></p>
+				
+				<div id="card-details-dialog" class="ui-dialog">
+					<div id="tabs">
+						<ul>
+							<li><a href="#tabs-1">Text</a></li>
+							<li><a href="#tabs-2">Due date</a></li>
+							<li><a href="#tabs-3">Label</a></li>
+						</ul>
+						<div id="tabs-1">
+							<p>Text</p>
+						</div>
+						<div id="tabs-2">
+							<div class="button">
+								<p>Due date: </p><input type="text" size="10" value="" id="datepicker" readonly="true" />
+							</div>
+						</div>
+						<div id="tabs-3">
+							<div id="label-widget"></div>
+						</div>
 					</div>
 				</div>
-			</div>
 		</div>
-	
 	</body>
+	<script src="label-widget.js"></script>
 	<script src="app2.js"></script>
 </html>

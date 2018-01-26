@@ -1,33 +1,45 @@
 $(document).ready(function() {
 
 	var cardClone = $(".card").clone();
-	var listClone = $(".list-container").clone();
+	var listClone = $(".list").clone();
 
 	/***************************************************
-	*				MAKE NEW CARD
+	*				DRAGGABLE & DROPPABLE
 	****************************************************/
-	function handleDropEvent( event, ui ) {
-		var draggable = ui.draggable;
-	}
-
 	function makeDraggable(card) {
 		card.draggable({
-			containment: 'parent',
+			containment: 'window',
 			connectToSortable: ".list-cards",
-			opacity: 0.35
+			opacity: 0.35,
+			revert: "invalid"
 		});
 	}
 
 	function makeDroppable(item) {
 		item.droppable({
-			drop: handleDropEvent
-		});
-	}
+			activeClass:"is-activated",
+    		hoverClass:"is-hovered",
+			accept:".card",
+			drop: function(event, ui) {
+			  	var $card = $(ui.draggable);
+			  	$card.detach().css({top: 0,left: 0});
+				$card.appendTo($(this).find(".list-cards"));
+			}
+		  });
+	};
 
 	function makeSortable(item) {
 		item.sortable({
 			revert: true
 		});
+	}
+
+	/***************************************************
+	*				MAKE NEW CARD
+	****************************************************/
+	function initializeCard(card) {
+		card.on("click", ".button", removeCardHandler);
+		card.on("click", openDialogHandler);
 	}
 
 	var addCardHandler = function(event) {
@@ -61,27 +73,53 @@ $(document).ready(function() {
 	/***************************************************
 	*				MAKE NEW LIST
 	****************************************************/
+	function makeAnimatableList(trelloList) {
+		trelloList.on('mouseenter', function() {
+			$(this).addClass('highlight');
+		});
+
+		trelloList.on('mouseleave', function() {
+			$(this).removeClass('highlight');
+		});
+	}
+
+	function initializeList(trelloList) {
+		var newList = trelloList.find(".list");
+
+		var btnAddNewCard = trelloList.find(".add-new");
+		btnAddNewCard.on("click", ".button", addCardHandler);
+
+		var initialCard = trelloList.find(".card");
+		
+		var listHeader = trelloList.find(".list-header");
+		listHeader.on("click", ".button", removeListHandler);
+
+		var cardList = trelloList.find( ".list-cards" );
+
+		makeDraggable(initialCard);
+		makeSortable(cardList);
+		makeDroppable(trelloList);
+		makeAnimatableList(newList);
+
+		initializeCard(initialCard);
+	}
+
+	function createNewList() {
+		var listColumn = listClone.clone();
+
+		initializeList(listColumn);
+
+		return listColumn;
+	}
+
 	var addListHandler = function(event) {
 		event.preventDefault();
 
-		var newBoard = listClone.clone();
+		var listColumn = createNewList();
 
-		var addNew = newBoard.find(".add-new");
-		addNew.on("click", ".button", addCardHandler);
-
-		var closeCard = newBoard.find(".card");
-		closeCard.on("click", ".button", removeCardHandler);
-
-		var closeList = newBoard.find(".list-header");
-		closeList.on("click", ".button", removeListHandler);
-
-		var listCards = newBoard.find( ".list-cards" );
-
-		makeDraggable(closeCard);
-		makeSortable(listCards);
-		makeDroppable(newBoard);
-
-		newBoard.prependTo(".board");
+		listColumn.hide();
+		listColumn.appendTo(".board");
+		listColumn.show('fade', 500);
 	};
 
 	/***************************************************
@@ -90,14 +128,19 @@ $(document).ready(function() {
 	var removeListHandler = function(event) {
 		event.preventDefault();
 
-		$(this).closest('.list-container').remove();
+		$(this).closest('.list').remove();
 	}
 
 	/***************************************************
 	*				DIALOG
 	****************************************************/
 	var cardDialog = $( "#card-details-dialog" );
-	cardDialog.dialog({ autoOpen: false, title: 'Card' });
+	cardDialog.dialog({
+		autoOpen: false,
+		title: 'Card',
+		hide: 'explode',
+        show: 'puff'
+	});
 
 	var openDialogHandler = function(event) {
 		var cardText = $(this).find(".card-text").text();
@@ -112,7 +155,11 @@ $(document).ready(function() {
 	*				DATEPICKER
 	****************************************************/
 	var dialogDatePicker = $( "#datepicker" );
-	dialogDatePicker.datepicker();
+	dialogDatePicker.datepicker({
+		showOn: "button",
+		buttonText: "Set Due date"
+	  });
+	dialogDatePicker.datepicker('setDate', new Date());
 
 	/***************************************************
 	*				TABS
@@ -121,27 +168,26 @@ $(document).ready(function() {
 	dialogTabs.tabs();
 
 	/***************************************************
-	*				DRAGGABLE & DROPPABLE
+	*				LABEL WIDGET
 	****************************************************/
-	// $( function() {
-	// 	$(".list").draggable();
-	// 	$(".list").droppable({
-	// 	//   drop: function( event, column) {
-	// 	// 	$(this)
-	// 	//   		}
-	// 	// 	});
-	// });
+	var labelWidget = $( "#label-widget" );
+	labelWidget.cardlabel({label: "Important", color: "#FF0000"});
 
-	$(".add-new").on("click", ".button", addCardHandler);
+	/***************************************************
+	*				INITIALIZATION
+	****************************************************/
+	function addNewListWithName(name) {
+		var newTrelloList = createNewList();
+		newTrelloList.find(".card-title").text(name);
+		newTrelloList.appendTo($(".board"));
+	}
 
-	makeSortable($( ".list-cards" ));
-	makeDroppable($( ".list-container" ));
-	
-	$(".card").on("click", ".button", removeCardHandler);
-	$(".card").on("click", openDialogHandler);
-	makeDraggable($(".card"));
-	
+	initializeList($(".list"));
+
+	addNewListWithName("Doing");
+	addNewListWithName("Done");
+
 	$(".adder").on("click", ".button", addListHandler);
-	$(".list-header").on("click", ".button", removeListHandler);
-	$(".list").draggable();
+
+	$("#trello-container").removeClass("hide");
 });
