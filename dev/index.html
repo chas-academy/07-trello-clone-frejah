@@ -6,7 +6,7 @@
 		<title>Trello</title>
 		
 		<link rel="stylesheet" href="styles.css">
-		<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+		<link rel="stylesheet" href="http://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 
 		<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 		<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
@@ -43,30 +43,29 @@
 								</form>
 							</li>
 						</ul>	
-					</div>	
-					
+					</div>
 			</div>
 				
-				<div id="card-details-dialog" class="ui-dialog">
-					<div id="tabs">
-						<ul>
-							<li><a href="#tabs-1">Text</a></li>
-							<li><a href="#tabs-2">Due date</a></li>
-							<li><a href="#tabs-3">Label</a></li>
-						</ul>
-						<div id="tabs-1">
-							<p>Text</p>
-						</div>
-						<div id="tabs-2">
-							<div class="button">
-								<p>Due date: </p><input type="text" size="10" value="" id="datepicker" readonly="true" />
-							</div>
-						</div>
-						<div id="tabs-3">
-							<div id="label-widget"></div>
+			<div id="card-details-dialog" class="ui-dialog">
+				<div id="tabs">
+					<ul>
+						<li><a href="#tabs-1">Text</a></li>
+						<li><a href="#tabs-2">Due date</a></li>
+						<li><a href="#tabs-3">Label</a></li>
+					</ul>
+					<div id="tabs-1">
+						<p>Text</p>
+					</div>
+					<div id="tabs-2">
+						<div class="button">
+							<p>Due date: </p><input type="text" size="10" value="" id="datepicker" readonly="true" />
 						</div>
 					</div>
+					<div id="tabs-3">
+						<div id="label-widget"></div>
+					</div>
 				</div>
+			</div>
 		</div>
 	</body>
 	<script src="label-widget.js"></script>
